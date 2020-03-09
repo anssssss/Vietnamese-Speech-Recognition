@@ -1,0 +1,17 @@
+Vietnamese Speech Recognition using Connectionist Temporal Classification
+
+Data source: AILAB (https://ailab.hcmus.edu.vn/vivos/)
+
+Based on Neural network architecture from Deep Speech: Scaling up end-to-end speech recognition by Hannun et al. 
+(https://arxiv.org/pdf/1412.5567.pdf)
+
+Implementation of CTC is based on example by Keras (https://github.com/keras-team/keras/blob/master/examples/image_ocr.py#L457)
+
+Project milestones
+
+-   Processing sound input                              -   DONE
+-   Processing text input                               -   DONE
+-   Building machine learning model                     -   DONE
+-   Training and tuning model                           -   UNDER PROGRESS
+-   Validating result                                   -   TO DO
+-   Building realtime speech recognition application    -   TO DO
