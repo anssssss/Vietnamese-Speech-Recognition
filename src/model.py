@@ -11,12 +11,13 @@ from tensorflow.keras.optimizers import Adam
 from math import ceil
 
 path = './data/'
+path_save = path + 'model/'
 
 # model hyperparameters
 
 #   set of dense layers
 #       number of units in each layer
-set_1 = [256, 256, 256]
+set_1 = [128, 128]
 #       parameters initializer
 ini_param_1 = 'random_normal'
 #       bias initializer
@@ -26,7 +27,7 @@ rate_1 = 0.2
 
 #   set of bidirectional LSTM layers
 #       number of units in each layer
-set_LSTM = [256]
+set_LSTM = [128]
 #       activation function
 f_LSTM = 'relu'
 #       parameters initializer
@@ -38,7 +39,7 @@ mode = 'sum'
 
 #   a dense layer
 #       number of units
-no = 256
+no = 128
 #       parameters initializer
 ini_param_2 = 'random_normal'
 #       bias initializer
@@ -73,8 +74,18 @@ optimizer = Adam(epsilon=1e-8)
 size_batch = 16
 
 #   number of epochs
-no_epoch = 2
+no_epoch = 1
 
+#   starts training from the start
+start = False
+
+# processes text data
+def process(file):
+    line = file.readline().strip('\n').split(' ')
+    line = [int(no) for no in line[:-1]] # last element is a blank
+    line = [97 if no == -1 else no for no in line] # keras doesn't except negative labels
+    return line
+    
 # data generator
 def generator(set, size):
     sound_batch = []
@@ -109,9 +120,7 @@ def generator(set, size):
                 max = timestep
 
             # loads text data
-            line = text.readline().strip('\n').split(' ')
-            line = [int(no) for no in line[:-1]] # last element is a blank
-            line = [97 if no == -1 else no for no in line] # keras doesn't except negative labels
+            line = process(text)
             text_batch.append(line)
             text_length.append(len(line))
 
@@ -194,6 +203,10 @@ def build():
 
     model.compile(loss = f, optimizer=optimizer)
 
+    # loads weight to continue to train
+    if not start:
+        model.load_weights(path_save + 'weight.h5')
+
     print(model.summary())
     return model
 
@@ -205,9 +218,6 @@ def train(model):
     # early stopping
     stop = EarlyStopping(min_delta=0, patience=no_stop, mode='auto')
 
-    # save path
-    path_save = path + 'model/'
-
     # check point
     point = ModelCheckpoint(path_save + 'best.hdf5', save_best_only=True)
 
@@ -215,10 +225,7 @@ def train(model):
     model.fit_generator(callbacks = [reduction, stop, point], generator = generator('train', size_batch), epochs = no_epoch,
                         verbose = 2, steps_per_epoch = ceil(11660 / size_batch))
 
-    # saves model
-    model_json = model.to_json()
-    with open(path_save + 'model.json', 'w') as file:
-        file.write(model_json)
+    # saves weights
     model.save_weights(path_save + 'weight.h5')
 
 if __name__ == '__main__':

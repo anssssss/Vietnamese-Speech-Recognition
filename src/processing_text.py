@@ -16,6 +16,8 @@ def decode(encoded):
     for no in encoded:
         if no < 97:
             text.append(chars[no])
+        else:
+            text.append('_')
     return text
 
 # writes encoded text to file
