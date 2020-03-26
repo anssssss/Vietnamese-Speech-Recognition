@@ -9,6 +9,7 @@ from tensorflow.keras.models import Model
 from tensorflow.keras.callbacks import ReduceLROnPlateau, ModelCheckpoint, EarlyStopping
 from tensorflow.keras.optimizers import Adam
 from math import ceil
+from random import shuffle
 
 path = './data/'
 path_save = path + 'model/'
@@ -126,6 +127,11 @@ def generator(set, size):
 
             # end of batch
             if count == size:
+
+                # shuffling
+                combine = list(zip(sound_batch, text_batch, sound_length, text_length))
+                shuffle(combine)
+                sound_batch, text_batch, sound_length, text_length = zip(*combine)
 
                 # padding
                 sound_batch = [pad(s, [(0, 0), (0, max - s.shape[1])], mode='constant').T for s in sound_batch]
