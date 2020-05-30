@@ -59,8 +59,8 @@ def process_sound(sound, model):
 def evaluate(model):
 
     # loads test data
-    file_txt = open(path + 'encoded/train.txt')
-    path_sound = path + 'spectrogram/train/'
+    file_txt = open(path + 'encoded/test.txt')
+    path_sound = path + 'spectrogram/test/'
     for file_sound in listdir(path_sound):
 
         # sound spectrogram

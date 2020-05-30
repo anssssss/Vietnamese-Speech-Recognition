@@ -9,7 +9,7 @@ path = './data/'
 
 def test():
     # rate, sample = read(path + '../../data/vivos/train/waves/VIVOSSPK01/VIVOSSPK01_R001.wav')
-    rate, sample = read(path + 'test/1.wav')
+    rate, sample = read(path + 'test/test.wav')
     _, _, spectrogram = signal.spectrogram(sample[:,0][0::6], rate)
 
     # print(sample[:,0].shape)
